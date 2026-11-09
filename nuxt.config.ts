@@ -2,14 +2,15 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2025-07-15',
 	devtools: { enabled: true },
+	css: ['~/assets/css/main.css', '~/assets/css/reveal.css'],
 	app: {
 		head: {
 			htmlAttrs: { lang: 'zh-Hant' },
-			titleTemplate: 'Baird Ma | %s',
+			titleTemplate: 'Paka | %s',
 			meta: [
 				{
 					property: 'og:site_name',
-					content: 'Baird Ma / Frontend Engineer / Photographer',
+					content: 'Paka (Shun Ren Ma) / Photographer',
 				},
 				{ property: 'og:type', content: 'website' },
 				{ property: 'og:locale', content: 'zh_TW' },

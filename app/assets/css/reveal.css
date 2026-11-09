@@ -1,0 +1,21 @@
+.ani-blur {
+	opacity: 0;
+	filter: blur(30px);
+	transform: scale(1.05);
+	transition: opacity 1.5s ease-out, filter 1s ease-out, transform 1.8s ease-in-out;
+}
+
+.ani-blur.on {
+	opacity: 1;
+	filter: blur(0);
+	transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ani-blur {
+		opacity: 1;
+		filter: none;
+		transform: none;
+		transition: none;
+	}
+}

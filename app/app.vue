@@ -1,5 +1,4 @@
 <template>
-  <div>
-   HI I'm Test.
-  </div>
+  <NuxtPage />
+  <TheCursor />
 </template>
