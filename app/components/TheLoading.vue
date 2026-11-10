@@ -2,20 +2,21 @@
 import p1 from '~/assets/images/loading/p1.webp'
 import p2 from '~/assets/images/loading/p2.webp'
 import p3 from '~/assets/images/loading/p3.webp'
-import p4 from '~/assets/images/loading/p5.webp'
+import p4 from '~/assets/images/loading/p4.webp'
+import p5 from '~/assets/images/loading/p5.webp'
 
-const props = defineProps<{ heroSrc: string }>()
 const emit = defineEmits<{ done: [] }>()
 
 const PRELOAD_TIMEOUT_MS = 3000
 const PHOTO_HOLD_MS = 200
 
-const word = "paka's photography portfolio"
+const word = "PAKA's Photography Portfolio"
 const photos = [
   { id: 1, url: p1 },
   { id: 2, url: p2 },
   { id: 3, url: p3 },
   { id: 4, url: p4 },
+  { id: 5, url: p5 },
 ]
 
 const { $lenis } = useNuxtApp()
@@ -34,9 +35,8 @@ function animationsDone(el: Element, options?: GetAnimationsOptions) {
 }
 
 function preload() {
-  const urls = [props.heroSrc, ...photos.map((photo) => photo.url)]
   return Promise.allSettled(
-    urls.map((url) => {
+    photos.map(({ url }) => {
       const img = new Image()
       img.src = url
       return img.decode()
@@ -113,7 +113,7 @@ onBeforeUnmount(() => lockScroll(false))
 <style scoped>
 .loading {
   --intro-square: 30vmin;
-  --word-duration: 2s;
+  --word-duration: 2.5s;
   --photo-enter-duration: 0.5s;
   position: absolute;
   inset: 0;
@@ -157,7 +157,7 @@ onBeforeUnmount(() => lockScroll(false))
   margin: 0;
   padding: 0 24px;
   color: #fff;
-  font-size: clamp(1rem, 2.5vw, 2rem);
+  font-size: clamp(1rem, 4vw, 4rem);
   letter-spacing: 0.08em;
   text-align: center;
   animation: word-blur var(--word-duration) ease-in-out both;
