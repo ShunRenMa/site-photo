@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import heroSrc from '~/assets/images/cover1.jpg'
+import guting1 from '~/assets/video/guting1.mp4'
+import guting2 from '~/assets/video/guting2.mp4'
+import guting1Poster from '~/assets/images/hero/guting1.webp'
+import guting2Poster from '~/assets/images/hero/guting2.webp'
 
 useHead({
   title: 'Photography Portfolio',
@@ -17,27 +20,68 @@ useHead({
   ],
 })
 
+const videos = [
+  { id: 1, src: guting1, poster: guting1Poster },
+  { id: 2, src: guting2, poster: guting2Poster },
+]
+
 const isIntroDone = ref(false)
+const heroEl = ref<HTMLElement>()
+const activeIndex = ref(0)
+const videoEls: HTMLVideoElement[] = []
+let isHeroVisible = false
+let stopObserving: (() => void) | undefined
+
+function setVideoEl(el: unknown, index: number) {
+  if (el instanceof HTMLVideoElement) videoEls[index] = el
+}
+
+function playActive() {
+  videoEls[activeIndex.value]?.play().catch(() => {})
+}
+
+function playNext() {
+  activeIndex.value = (activeIndex.value + 1) % videos.length
+  const video = videoEls[activeIndex.value]
+  if (video) video.currentTime = 0
+  if (isHeroVisible) playActive()
+}
+
+onMounted(() => {
+  stopObserving = observeVisibility(heroEl.value!, (visible) => {
+    isHeroVisible = visible
+    if (visible) playActive()
+    else videoEls[activeIndex.value]?.pause()
+  })
+})
+
+onBeforeUnmount(() => stopObserving?.())
 </script>
 
 <template>
   <div class="stage">
-    <section class="hero" :class="{ 'is-done': isIntroDone }">
+    <section ref="heroEl" class="hero" :class="{ 'is-done': isIntroDone }">
       <div class="hero_img">
-        <img :src="heroSrc" alt="Hero Image">
+        <video
+          v-for="(video, index) in videos"
+          :key="video.id"
+          :ref="(el) => setVideoEl(el, index)"
+          class="hero_video"
+          :class="{ 'is-active': index === activeIndex }"
+          :src="video.src"
+          :poster="video.poster"
+          muted
+          playsinline
+          preload="auto"
+          @ended="playNext"
+        />
       </div>
       <header class="hero_bar hero_bar--top">Paka</header>
       <h1 class="hero_tagline">Photography Portfolio</h1>
-      <footer class="hero_bar hero_bar--bottom">
-        <span>Paka (Shun Ren Ma)</span>
-        <small>&copy; Shun Ren Ma</small>
+      <footer class="footer">
       </footer>
     </section>
-    <TheLoading
-      v-if="!isIntroDone"
-      :hero-src="heroSrc"
-      @done="isIntroDone = true"
-    />
+    <TheLoading v-if="!isIntroDone" @done="isIntroDone = true" />
   </div>
 </template>
 
@@ -54,19 +98,28 @@ const isIntroDone = ref(false)
   inset: 0;
 }
 
-.hero_img,
-.hero_img img {
-  display: block;
+.hero_img {
+  position: relative;
   width: 100%;
   height: 100%;
 }
 
-.hero_img img {
+.hero_video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  opacity: 0;
+}
+
+.hero_video.is-active {
+  opacity: 1;
 }
 
 .hero_bar,
 .hero_tagline {
+  
   position: absolute;
   opacity: 0;
   transition:
@@ -85,12 +138,6 @@ const isIntroDone = ref(false)
 .hero_bar--top {
   top: 0;
   transform: translateY(-100%);
-}
-
-.hero_bar--bottom {
-  bottom: 0;
-  transform: translateY(100%);
-  transition-delay: 0.15s;
 }
 
 .hero_tagline {
