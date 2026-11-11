@@ -30,10 +30,6 @@ const pulledCount = ref(0)
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-function animationsDone(el: Element, options?: GetAnimationsOptions) {
-  return Promise.allSettled(el.getAnimations(options).map((a) => a.finished))
-}
-
 function preload() {
   return Promise.allSettled(
     photos.map(({ url }) => {
@@ -115,9 +111,9 @@ onBeforeUnmount(() => lockScroll(false))
   --intro-square: 30vmin;
   --word-duration: 2.5s;
   --photo-enter-duration: 0.5s;
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 100;
   pointer-events: none;
 }
 
