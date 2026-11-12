@@ -1,5 +1,9 @@
 <template>
-	<div class="cursor" :class="{ 'is-visible': visible }" aria-hidden="true">
+	<div
+		class="cursor"
+		:class="{ 'is-visible': visible, 'is-pressed': pressed }"
+		aria-hidden="true"
+	>
 		<svg
 			ref="frameEl"
 			class="cursor__frame"
@@ -18,6 +22,7 @@ const LERP = 0.1
 const frameEl = useTemplateRef<SVGSVGElement>('frameEl')
 const dotEl = useTemplateRef<HTMLElement>('dotEl')
 const visible = ref(false)
+const pressed = ref(false)
 
 let mouseX = 0
 let mouseY = 0
@@ -37,8 +42,16 @@ function onPointerMove(e: PointerEvent) {
 	}
 
 	if (dotEl.value) {
-		dotEl.value.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`
+		dotEl.value.style.translate = `${mouseX}px ${mouseY}px`
 	}
+}
+
+function onPointerDown() {
+	pressed.value = true
+}
+
+function onPointerUp() {
+	pressed.value = false
 }
 
 function onPointerLeave() {
@@ -49,7 +62,7 @@ function tick() {
 	frameX += (mouseX - frameX) * LERP
 	frameY += (mouseY - frameY) * LERP
 	if (frameEl.value) {
-		frameEl.value.style.transform = `translate(${frameX}px, ${frameY}px) translate(-50%, -50%)`
+		frameEl.value.style.translate = `${frameX}px ${frameY}px`
 	}
 	raf = requestAnimationFrame(tick)
 }
@@ -63,6 +76,8 @@ onMounted(() => {
 
 	document.documentElement.classList.add('has-custom-cursor')
 	window.addEventListener('pointermove', onPointerMove, { passive: true })
+	window.addEventListener('pointerdown', onPointerDown)
+	window.addEventListener('pointerup', onPointerUp)
 	document.addEventListener('pointerleave', onPointerLeave)
 	raf = requestAnimationFrame(tick)
 })
@@ -70,6 +85,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	document.documentElement.classList.remove('has-custom-cursor')
 	window.removeEventListener('pointermove', onPointerMove)
+	window.removeEventListener('pointerdown', onPointerDown)
+	window.removeEventListener('pointerup', onPointerUp)
 	document.removeEventListener('pointerleave', onPointerLeave)
 	cancelAnimationFrame(raf)
 })
@@ -81,6 +98,7 @@ onBeforeUnmount(() => {
 	--cursor-frame-width: 36px;
 	--cursor-dot-color: #ffcdac;
 	--cursor-dot-size: 10px;
+	--cursor-press-shrink: 0.3; /* 點擊縮小比例 */
 
 	position: fixed;
 	top: 0;
@@ -101,7 +119,16 @@ onBeforeUnmount(() => {
 	position: absolute;
 	top: 0;
 	left: 0;
-	will-change: transform;
+	transform: translate(-50%, -50%);
+	transform-origin: 0 0;
+	will-change: translate, scale;
+	transition: scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cursor.is-pressed .cursor__frame,
+.cursor.is-pressed .cursor__dot {
+	scale: calc(1 - var(--cursor-press-shrink));
+	transition-duration: 0.1s;
 }
 
 .cursor__frame {
