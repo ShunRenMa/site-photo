@@ -10,7 +10,7 @@ const videos = [
   { id: 1, src: guting1, poster: guting1Poster },
   { id: 2, src: guting2, poster: guting2Poster },
 ]
-const title = ['Making', 'ordinary days', 'special.']
+const title = ['Making', 'Ordinary Days', 'Special.']
 const titleLines = (() => {
   let i = 0
   return title.map((text) => [...text].map((char) => ({ char, i: i++ })))
@@ -65,7 +65,6 @@ onBeforeUnmount(() => stopObserving?.())
         @ended="playNext"
       />
     </div>
-    <header class="hero_bar hero_bar--top">Paka</header>
     <h1 class="hero_title" :aria-label="title.join(' ')">
       <span
         v-for="(line, lineIndex) in titleLines"
@@ -81,16 +80,23 @@ onBeforeUnmount(() => stopObserving?.())
         >{{ c.char }}</span>
       </span>
     </h1>
-    <footer class="footer">
-    </footer>
+    <span class="hero_arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2v26M2 18l10 10 10-10" />
+      </svg>
+    </span>
   </section>
 </template>
 
 <style scoped>
 .hero {
-  --brand-duration: 0.6s;
   --char-duration: 0.7s;
   --char-stagger: 0.03s;
+  --accent: #26b9eeed;
+  --arrow-size: clamp(40px, 5vw, 72px);
+  --arrow-color: #767676;
+  --arrow-wipe-color: #053056;
+  --arrow-wipe-duration: 0.8s;
   position: relative;
   height: 130svh;
   overflow: hidden;
@@ -115,22 +121,6 @@ onBeforeUnmount(() => stopObserving?.())
   opacity: 1;
 }
 
-.hero_bar {
-  position: absolute;
-}
-
-.hero_bar {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 24px;
-  inset-inline: 0;
-}
-
-.hero_bar--top {
-  top: 0;
-}
-
 .hero_title {
   position: absolute;
   top: 60svh;
@@ -140,24 +130,22 @@ onBeforeUnmount(() => stopObserving?.())
   font-weight: 400;
   line-height: 1.1;
   transform: translateY(-50%);
-  color: #0ea7a3;
+  color: var(--accent);
 }
 
 .hero_line {
+  position: relative;
   display: block;
   overflow: hidden;
 }
 
 .hero_line:nth-child(2) {
-  position: relative;
   right: -10%;
   text-align: end;
 }
 
 .hero_line:nth-child(3) {
-  position: relative;
   right: -5%;
-  text-align: start;
 }
 
 .hero_char {
@@ -165,11 +153,21 @@ onBeforeUnmount(() => stopObserving?.())
   white-space: pre;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .hero_bar {
-    opacity: 0;
-  }
+.hero_arrow {
+  position: absolute;
+  top: calc(100svh - 40px);
+  translate: 0 -100%;
+  right: 4%;
+  width: var(--arrow-size);
+  color: var(--arrow-color);
+}
 
+.hero_arrow svg {
+  display: block;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
   .hero_char {
     transform: translateY(110%);
   }
@@ -178,33 +176,73 @@ onBeforeUnmount(() => stopObserving?.())
     transform: translateY(-110%);
   }
 
-  .hero.is-playing .hero_bar {
-    animation: hero-brand-in var(--brand-duration) var(--brand-delay, 0s)
-      cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
   .hero.is-playing .hero_char {
     animation: hero-char-in var(--char-duration)
       calc(var(--title-delay, 0s) + var(--i) * var(--char-stagger))
       cubic-bezier(0.33, 1, 0.68, 1) both;
   }
-}
 
-@keyframes hero-brand-in {
-  from {
-    opacity: 0;
-    transform: translateY(-100%);
+  .hero_arrow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--arrow-wipe-color);
+    clip-path: inset(0 100% 0 0);
   }
 
-  to {
-    opacity: 1;
-    transform: none;
+  .hero_arrow svg {
+    visibility: hidden;
+  }
+
+  .hero.is-playing .hero_arrow::after {
+    animation: hero-arrow-wipe var(--arrow-wipe-duration) var(--arrow-delay, 0s)
+      cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+
+  .hero.is-playing .hero_arrow svg {
+    animation:
+      hero-arrow-show var(--arrow-wipe-duration) var(--arrow-delay, 0s) both,
+      hero-arrow-bounce 1.6s
+        calc(var(--arrow-delay, 0s) + var(--arrow-wipe-duration)) ease-in-out
+        infinite;
   }
 }
 
 @keyframes hero-char-in {
   to {
     transform: none;
+  }
+}
+
+@keyframes hero-arrow-wipe {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  50% {
+    clip-path: inset(0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes hero-arrow-show {
+  0%,
+  49.9% {
+    visibility: hidden;
+  }
+
+  50%,
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes hero-arrow-bounce {
+  50% {
+    transform: translateY(12px);
   }
 }
 </style>
