@@ -16,6 +16,7 @@ useHead({
 })
 
 const isIntroDone = ref(false)
+const backgroundColor = ref('#e3e9e9')
 </script>
 
 <template>
@@ -26,21 +27,22 @@ const isIntroDone = ref(false)
       <TheHero :is-intro-done="isIntroDone" />
     </div>
     <div class="sec">
-
     </div>
+    <ThePhotobook :background="backgroundColor" />
+    
   </div>
 </template>
 
 
 <style scoped>
 .home {
-  --brand-delay: 0s;
   --nav-delay: 0.4s;
   --title-delay: 0.8s;
+  --arrow-delay: 2s;
 }
 
 .sec {
   height: 100vh;
-  background-color: #dde1e1;
+  background-color: v-bind(backgroundColor);
 }
 </style>
