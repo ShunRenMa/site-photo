@@ -17,6 +17,11 @@ useHead({
 
 const isIntroDone = ref(false)
 const backgroundColor = ref('#e3e9e9')
+
+onMounted(() => {
+  history.scrollRestoration = 'manual'
+  window.scrollTo(0, 0)
+})
 </script>
 
 <template>
@@ -38,7 +43,7 @@ const backgroundColor = ref('#e3e9e9')
 .home {
   --nav-delay: 0.4s;
   --title-delay: 0.8s;
-  --arrow-delay: 2s;
+  --scroll-delay: 2s;
 }
 
 .sec {

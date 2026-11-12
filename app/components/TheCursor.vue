@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="cursor"
-		:class="{ 'is-visible': visible, 'is-pressed': pressed }"
+		:class="[`cursor--${CENTER}`, { 'is-visible': visible, 'is-pressed': pressed }]"
 		aria-hidden="true"
 	>
 		<svg
@@ -18,6 +18,8 @@
 <script setup lang="ts">
 /** 外框追上滑鼠的速度，越小越慢 */
 const LERP = 0.1
+/** 中心樣式 */
+const CENTER: 'dot' | 'plus' = 'plus'
 
 const frameEl = useTemplateRef<SVGSVGElement>('frameEl')
 const dotEl = useTemplateRef<HTMLElement>('dotEl')
@@ -98,6 +100,8 @@ onBeforeUnmount(() => {
 	--cursor-frame-width: 36px;
 	--cursor-dot-color: #ffcdac;
 	--cursor-dot-size: 10px;
+	--cursor-plus-size: 10px;
+	--cursor-plus-width: 1px;
 	--cursor-press-shrink: 0.3; /* 點擊縮小比例 */
 
 	position: fixed;
@@ -148,6 +152,15 @@ onBeforeUnmount(() => {
 	height: var(--cursor-dot-size);
 	border-radius: 50%;
 	background: var(--cursor-dot-color);
+}
+
+.cursor--plus .cursor__dot {
+	width: var(--cursor-plus-size);
+	height: var(--cursor-plus-size);
+	border-radius: 0;
+	background:
+		linear-gradient(var(--cursor-dot-color), var(--cursor-dot-color)) center / 100% var(--cursor-plus-width) no-repeat,
+		linear-gradient(var(--cursor-dot-color), var(--cursor-dot-color)) center / var(--cursor-plus-width) 100% no-repeat;
 }
 </style>
 

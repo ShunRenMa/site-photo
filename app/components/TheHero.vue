@@ -80,10 +80,11 @@ onBeforeUnmount(() => stopObserving?.())
         >{{ c.char }}</span>
       </span>
     </h1>
-    <span class="hero_arrow" aria-hidden="true">
-      <svg viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M12 2v26M2 18l10 10 10-10" />
-      </svg>
+    <span class="hero_scroll" aria-hidden="true">
+      <span class="hero_scroll_inner">
+        <span class="hero_scroll_text">Scroll</span>
+        <span class="hero_scroll_line" />
+      </span>
     </span>
   </section>
 </template>
@@ -93,10 +94,9 @@ onBeforeUnmount(() => stopObserving?.())
   --char-duration: 0.7s;
   --char-stagger: 0.03s;
   --accent: #26b9eeed;
-  --arrow-size: clamp(40px, 5vw, 72px);
-  --arrow-color: #767676;
-  --arrow-wipe-color: #053056;
-  --arrow-wipe-duration: 0.8s;
+  --scroll-color: #2e2e2e;
+  --scroll-wipe-color: #053056;
+  --scroll-wipe-duration: 0.8s;
   position: relative;
   height: 130svh;
   overflow: hidden;
@@ -153,18 +153,32 @@ onBeforeUnmount(() => stopObserving?.())
   white-space: pre;
 }
 
-.hero_arrow {
+.hero_scroll {
   position: absolute;
-  top: calc(100svh - 40px);
-  translate: 0 -100%;
-  right: 4%;
-  width: var(--arrow-size);
-  color: var(--arrow-color);
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  color: var(--scroll-color);
 }
 
-.hero_arrow svg {
-  display: block;
-  width: 100%;
+.hero_scroll_inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero_scroll_text {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-right: -2px;
+  margin-bottom: 8px;
+}
+
+.hero_scroll_line {
+  width: 1px;
+  height: calc(30svh + 4.8vw);
+  background: currentColor;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -182,29 +196,25 @@ onBeforeUnmount(() => stopObserving?.())
       cubic-bezier(0.33, 1, 0.68, 1) both;
   }
 
-  .hero_arrow::after {
+  .hero_scroll::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--arrow-wipe-color);
+    background: var(--scroll-wipe-color);
     clip-path: inset(0 100% 0 0);
   }
 
-  .hero_arrow svg {
+  .hero_scroll_inner {
     visibility: hidden;
   }
 
-  .hero.is-playing .hero_arrow::after {
-    animation: hero-arrow-wipe var(--arrow-wipe-duration) var(--arrow-delay, 0s)
+  .hero.is-playing .hero_scroll::after {
+    animation: hero-scroll-wipe var(--scroll-wipe-duration) var(--scroll-delay, 0s)
       cubic-bezier(0.76, 0, 0.24, 1) both;
   }
 
-  .hero.is-playing .hero_arrow svg {
-    animation:
-      hero-arrow-show var(--arrow-wipe-duration) var(--arrow-delay, 0s) both,
-      hero-arrow-bounce 1.6s
-        calc(var(--arrow-delay, 0s) + var(--arrow-wipe-duration)) ease-in-out
-        infinite;
+  .hero.is-playing .hero_scroll_inner {
+    animation: hero-scroll-show var(--scroll-wipe-duration) var(--scroll-delay, 0s) both;
   }
 }
 
@@ -214,7 +224,7 @@ onBeforeUnmount(() => stopObserving?.())
   }
 }
 
-@keyframes hero-arrow-wipe {
+@keyframes hero-scroll-wipe {
   0% {
     clip-path: inset(0 100% 0 0);
   }
@@ -228,7 +238,7 @@ onBeforeUnmount(() => stopObserving?.())
   }
 }
 
-@keyframes hero-arrow-show {
+@keyframes hero-scroll-show {
   0%,
   49.9% {
     visibility: hidden;
@@ -237,12 +247,6 @@ onBeforeUnmount(() => stopObserving?.())
   50%,
   100% {
     visibility: visible;
-  }
-}
-
-@keyframes hero-arrow-bounce {
-  50% {
-    transform: translateY(12px);
   }
 }
 </style>
