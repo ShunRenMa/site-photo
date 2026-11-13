@@ -295,8 +295,13 @@ onBeforeUnmount(() => {
 
 .photobook__img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: auto;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.photobook__content--reverse .photobook__img {
+  margin-left: auto;
 }
 
 .photobook__paragraphs{
