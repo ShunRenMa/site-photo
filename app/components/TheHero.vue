@@ -4,7 +4,12 @@ import guting2 from '~/assets/video/guting2.mp4'
 import guting1Poster from '~/assets/images/hero/guting1.webp'
 import guting2Poster from '~/assets/images/hero/guting2.webp'
 
-defineProps<{ isIntroDone: boolean }>()
+const props = defineProps<{ isIntroDone: boolean }>()
+const emit = defineEmits<{ ready: [] }>()
+
+watch(() => props.isIntroDone, (done) => {
+  if (done && matchMedia('(prefers-reduced-motion: reduce)').matches) emit('ready')
+})
 
 const videos = [
   { id: 1, src: guting1, poster: guting1Poster },
@@ -81,7 +86,7 @@ onBeforeUnmount(() => stopObserving?.())
       </span>
     </h1>
     <span class="hero_scroll" aria-hidden="true">
-      <span class="hero_scroll_inner">
+      <span class="hero_scroll_inner" @animationend.self="emit('ready')">
         <span class="hero_scroll_text">Scroll</span>
         <span class="hero_scroll_line" />
       </span>

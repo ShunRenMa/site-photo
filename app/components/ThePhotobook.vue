@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import p07414 from '~/assets/images/photobook/DSC07414.webp'
-import p07461 from '~/assets/images/photobook/DSC07461.webp'
-import p07517 from '~/assets/images/photobook/DSC07517.webp'
+const photoFiles = import.meta.glob<string>('~/assets/images/photobook/*.webp', { eager: true, import: 'default' })
+const photoMap = Object.fromEntries(
+    Object.entries(photoFiles).map(([path, src]) => [path.split('/').pop()!.replace('.webp', ''), src]),
+)
+const toPhotos = (ids: string[]) => ids.map(id => ({ id, src: photoMap[id]! }))
 
 type Photobook = {
     title: string[]
@@ -25,11 +27,10 @@ const photobooks: Record<string, Photobook> = {
             'I also try to interpret these scenes from different perspectives.',
             'Though honestly, I still love shooting the classic tourist spots, haha.',
         ],
-        photos: [
-            { id: 'DSC07414', src: p07414 },
-            { id: 'DSC07461', src: p07461 },
-            { id: 'DSC07517', src: p07517 },
-        ],
+        photos: toPhotos([
+            'DSC06471-Edit', 'DSC06436', 'DSC06506', 'DSC06676', 'DSC07090',
+            'DSC07194', 'DSC07203', 'DSC07238', 'DSC07414', 'DSC07517',
+        ]),
     },
     travel: {
         title: ['Travel Photography', '旅行攝影'],
@@ -45,11 +46,7 @@ const photobooks: Record<string, Photobook> = {
             'Looking at these photos brings back the memories, and the people and things I met along the way.',
             'Here are some photos from my trips abroad!',
         ],
-        photos: [
-            { id: 'DSC07414', src: p07414 },
-            { id: 'DSC07461', src: p07461 },
-            { id: 'DSC07517', src: p07517 },
-        ],
+        photos: toPhotos(['20251028-DSC03303', '20251028-DSC03262', '20251028-DSC03273']),
     },
     portrait: {
         title: ['Portrait Photography', '人像攝影'],
@@ -63,11 +60,10 @@ const photobooks: Record<string, Photobook> = {
             'I hope to capture their emotions and beauty, creating something beyond the everyday.',
             'In the future, I hope to present them in a more dynamic way!',
         ],
-        photos: [
-            { id: 'DSC07414', src: p07414 },
-            { id: 'DSC07461', src: p07461 },
-            { id: 'DSC07517', src: p07517 },
-        ],
+        photos: toPhotos([
+            '20251029-DSC03373', '20251029-DSC03519', '20251029-DSC03526',
+            '20260208-DSC04957', '20260208-DSC04966', 'DSC01588-2', 'DSC01597',
+        ]),
     },
 }
 
@@ -187,7 +183,6 @@ onBeforeUnmount(() => {
               :src="photo.src"
               alt=""
               class="photobook__img"
-              loading="lazy"
               decoding="async"
             />
           </div>
@@ -290,7 +285,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 10vw;
-  padding-top: 50%;
+  padding-top: 80%;
   will-change: transform;
 }
 

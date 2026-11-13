@@ -18,10 +18,9 @@ useHead({
 const isIntroDone = ref(false)
 const backgroundColor = ref('#e3e9e9')
 
-onMounted(() => {
-  history.scrollRestoration = 'manual'
-  window.scrollTo(0, 0)
-})
+const lockScroll = useScrollLock()
+
+onBeforeUnmount(() => lockScroll(false))
 </script>
 
 <template>
@@ -29,7 +28,7 @@ onMounted(() => {
     <TheLoading v-if="!isIntroDone" @done="isIntroDone = true" />
     <TheNav :is-intro-done="isIntroDone" />
     <div>
-      <TheHero :is-intro-done="isIntroDone" />
+      <TheHero :is-intro-done="isIntroDone" @ready="lockScroll(false)" />
     </div>
     <div class="sec">
     </div>

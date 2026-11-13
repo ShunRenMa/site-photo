@@ -19,7 +19,7 @@ const photos = [
   { id: 5, url: p5 },
 ]
 
-const { $lenis } = useNuxtApp()
+const lockScroll = useScrollLock()
 
 const wordEl = ref<HTMLElement>()
 const frameEl = ref<HTMLElement>()
@@ -47,12 +47,6 @@ async function pullPhotos() {
     await nextTick()
     await animationsDone(frameEl.value!, { subtree: true })
   }
-}
-
-function lockScroll(locked: boolean) {
-  document.documentElement.style.overflow = locked ? 'hidden' : ''
-  if (locked) $lenis?.stop()
-  else $lenis?.start()
 }
 
 onMounted(async () => {
@@ -84,8 +78,6 @@ onMounted(async () => {
   await animationsDone(coverEl.value!)
   emit('done')
 })
-
-onBeforeUnmount(() => lockScroll(false))
 </script>
 
 <template>
