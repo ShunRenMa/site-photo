@@ -35,6 +35,13 @@ function playActive() {
   videoEls[activeIndex.value]?.play().catch(() => {})
 }
 
+function preloadNext(index: number) {
+  const next = videoEls[(index + 1) % videos.length]
+  if (!next || next.preload === 'auto') return
+  next.preload = 'auto'
+  next.load()
+}
+
 function playNext() {
   activeIndex.value = (activeIndex.value + 1) % videos.length
   const video = videoEls[activeIndex.value]
@@ -66,7 +73,8 @@ onBeforeUnmount(() => stopObserving?.())
         :poster="video.poster"
         muted
         playsinline
-        preload="auto"
+        :preload="index === 0 ? 'auto' : 'none'"
+        @canplaythrough="preloadNext(index)"
         @ended="playNext"
       />
     </div>
