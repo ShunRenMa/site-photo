@@ -206,7 +206,7 @@ watch(
   padding: 8px var(--gutter);
   line-height: 1.3;
   flex-direction: row-reverse;
-  color: #767676;
+  color: #fff;
   pointer-events: none;
   font-family: 'Lora', serif;
   font-optical-sizing: auto;

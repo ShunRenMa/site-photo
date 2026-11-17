@@ -78,6 +78,7 @@ onBeforeUnmount(() => stopObserving?.())
         @ended="playNext"
       />
     </div>
+    <div class="hero_overlay" aria-hidden="true" />
     <h1 class="hero_title" :aria-label="title.join(' ')">
       <span
         v-for="(line, lineIndex) in titleLines"
@@ -132,6 +133,12 @@ onBeforeUnmount(() => stopObserving?.())
 
 .hero_video.is-active {
   opacity: 1;
+}
+
+.hero_overlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.6);
 }
 
 .hero_title {
