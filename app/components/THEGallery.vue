@@ -32,6 +32,7 @@ const S3 = {
     enterEnd: 1.5,
     centerFrom: 0.6,
     spread: 0.5,
+    wipe: 1,
     mid: [ [0.1, -0.1],[-0.18, 0.25], [-0.15, -0.15] , [0.13, 0.12],[0, 0]],
 }
 
@@ -127,7 +128,7 @@ onMounted(() => {
         ScrollTrigger.create({
             trigger: s3.value,
             start: 'top top',
-            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread),
+            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe),
             pin: true,
         })
 
@@ -136,7 +137,7 @@ onMounted(() => {
             scrollTrigger: {
                 trigger: s3.value,
                 start: at(1 - S3.enterAt),
-                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread),
+                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe),
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -149,7 +150,8 @@ onMounted(() => {
                 stagger: (S3.enterEnd - S3.enterAt) / els.length,
             })
             .to(els, { x: 0, y: 0, scale: 1, duration: S3.spread })
-        zoomIn(tl3, '.s3 .ph img', S3.spread, '<', 1.1)
+        zoomIn(tl3, '.s3 .ph img:not(.next)', S3.spread, '<', 1.1)
+        tl3.fromTo('.s3 .next', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: S3.wipe })
     })
 })
 
@@ -176,11 +178,11 @@ onBeforeUnmount(() => {
             </div>
         </section>
         <section ref="s3" class="s3">
-            <div class="ph p1"><img :src="p('DSC06429')" alt=""></div>
-            <div class="ph p2"><img :src="p('DSC06506')" alt=""></div>
-            <div class="ph p3"><img :src="p('DSC07238')" alt=""></div>
-            <div class="ph p4"><img :src="p('DSC06162')" alt=""></div>
-            <div class="ph p5"><img :src="p('DSC07461')" alt=""></div>
+            <div class="ph p1"><img :src="p('DSC06429')" alt=""><img class="next" :src="p('DSC06676')" alt=""></div>
+            <div class="ph p2"><img :src="p('DSC06506')" alt=""><img class="next" :src="p('DSC07180')" alt=""></div>
+            <div class="ph p3"><img :src="p('DSC07238')" alt=""><img class="next" :src="p('DSC07194')" alt=""></div>
+            <div class="ph p4"><img :src="p('DSC06162')" alt=""><img class="next" :src="p('DSC07210')" alt=""></div>
+            <div class="ph p5"><img :src="p('DSC07461')" alt=""><img class="next" :src="p('DSC06350')" alt=""></div>
         </section>
     </div>
 </template>
@@ -244,6 +246,11 @@ onBeforeUnmount(() => {
 }
 
 .s3 .ph { aspect-ratio: 3 / 2; }
+.s3 .next {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0% 0% 0% 100%);
+}
 .p1 { left: 0; bottom: 5%; width: 26vw; z-index: 4; }
 .p2 { left: 10%; top: 5%; width: 22vw; z-index: 1; }
 .p3 { left: 70%; top: 45%; width: 24vw; z-index: 5; }
