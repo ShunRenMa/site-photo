@@ -33,7 +33,8 @@ onBeforeUnmount(() => lockScroll(false))
     <div class="sec"></div>
     <ThePhotobook :background="backgroundColor" />
     <div class="thr"></div>
-    <THEGallery />
+    <TheGallery />
+    <TheShowroom/>
   </div>
 </template>
 
