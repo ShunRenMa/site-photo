@@ -100,7 +100,8 @@ onMounted(async () => {
 
 <style scoped>
 .loading {
-  --intro-square: 30vmin;
+  --hole-w: 20vmin;
+  --hole-h: 30vmin;
   --word-duration: 2.5s;
   --photo-enter-duration: 0.5s;
   position: fixed;
@@ -110,30 +111,36 @@ onMounted(async () => {
 }
 
 .loading__cover {
-  --hole-start: 50%;
-  --hole-end: 50%;
+  --x-start: 50%;
+  --x-end: 50%;
+  --y-start: 50%;
+  --y-end: 50%;
   position: absolute;
   inset: 0;
   background: #000;
   clip-path: polygon(
     evenodd,
     0 0, 100% 0, 100% 100%, 0 100%, 0 0,
-    var(--hole-start) var(--hole-start),
-    var(--hole-end) var(--hole-start),
-    var(--hole-end) var(--hole-end),
-    var(--hole-start) var(--hole-end),
-    var(--hole-start) var(--hole-start)
+    var(--x-start) var(--y-start),
+    var(--x-end) var(--y-start),
+    var(--x-end) var(--y-end),
+    var(--x-start) var(--y-end),
+    var(--x-start) var(--y-start)
   );
 }
 
 .loading__cover.is-hole {
-  --hole-start: calc(50% - var(--intro-square));
-  --hole-end: calc(50% + var(--intro-square));
+  --x-start: calc(50% - var(--hole-w));
+  --x-end: calc(50% + var(--hole-w));
+  --y-start: calc(50% - var(--hole-h));
+  --y-end: calc(50% + var(--hole-h));
 }
 
 .loading__cover.is-open {
-  --hole-start: 0%;
-  --hole-end: 100%;
+  --x-start: 0%;
+  --x-end: 100%;
+  --y-start: 0%;
+  --y-end: 100%;
   transition: clip-path 1s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
@@ -153,7 +160,10 @@ onMounted(async () => {
 
 .loading__frame {
   position: absolute;
-  inset: calc(50% - var(--intro-square));
+  inset: 0;
+  width: calc(var(--hole-w) * 2);
+  height: calc(var(--hole-h) * 2);
+  margin: auto;
   overflow: hidden;
 }
 

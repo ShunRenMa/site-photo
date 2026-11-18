@@ -30,10 +30,12 @@ onBeforeUnmount(() => lockScroll(false))
     <div>
       <TheHero :is-intro-done="isIntroDone" @ready="lockScroll(false)" />
     </div>
-    <div class="sec">
-    </div>
+    <div class="sec"></div>
     <ThePhotobook :background="backgroundColor" />
-    
+    <div class="thr"></div>
+    <TheGallery />
+     <div class="thr"></div>
+    <TheShowroom/>
   </div>
 </template>
 
@@ -47,6 +49,11 @@ onBeforeUnmount(() => lockScroll(false))
 
 .sec {
   height: 100vh;
+  background-color: v-bind(backgroundColor);
+}
+
+.thr {
+  height: 30vh;
   background-color: v-bind(backgroundColor);
 }
 </style>

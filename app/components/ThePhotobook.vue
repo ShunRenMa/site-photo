@@ -77,6 +77,7 @@ const STAGGER = 500
 const ENTER = 1000
 const enterDuration = ENTER + STAGGER * 3
 const entered = ref(false)
+const CIRCLE_ALTERNATE_Y = true
 
 useHead({
   link: [
@@ -143,7 +144,13 @@ onBeforeUnmount(() => {
     class="photobook"
     :style="{ height: `${totalVh * 100}vh` }"
   >
-    <div class="photobook__sticky">
+    <div
+      class="photobook__sticky"
+      :class="{
+        'photobook__sticky--reverse': current % 2 === 1,
+        'photobook__sticky--bottom': CIRCLE_ALTERNATE_Y && current % 2 === 1,
+      }"
+    >
       <Transition name="photobook-fade" mode="out-in" :duration="{ enter: enterDuration, leave: 400 }">
       <div
         v-if="entered"
@@ -205,6 +212,37 @@ onBeforeUnmount(() => {
   top: 0;
   height: 100vh;
   padding: 0  4%;
+  overflow-x: clip;
+  overflow-y: visible;
+  isolation: isolate;
+}
+
+.photobook__sticky::before {
+  content: '';
+  position: absolute;
+  top: -10vw;
+  left: -18%;
+  z-index: -1;
+  width: 66vw;
+  aspect-ratio: 1;
+  border: 1px solid #05050566;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: left 1s ease-in-out, top 1s ease-in-out;
+}
+
+.photobook__sticky--reverse::before {
+  left: calc(118% - 66vw);
+}
+
+.photobook__sticky--bottom::before {
+  top: calc(100% - 56vw);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photobook__sticky::before {
+    transition: none;
+  }
 }
 
 .photobook__content {
@@ -265,14 +303,14 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 12px;
   margin: 1.5em 0 1em;
-  font-size: 1.4vw;
+  font-size: 24px;
   font-weight: 400;
   line-height: 1;
 }
 
 .photobook__desc {
   margin: 0 0 1em;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
 }
 
@@ -284,7 +322,7 @@ onBeforeUnmount(() => {
 .photobook__track {
   display: flex;
   flex-direction: column;
-  gap: 10vw;
+  gap: 32px;
   padding-top: 80%;
   will-change: transform;
 }
@@ -295,8 +333,13 @@ onBeforeUnmount(() => {
 
 .photobook__img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: auto;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.photobook__content--reverse .photobook__img {
+  margin-left: auto;
 }
 
 .photobook__paragraphs{
