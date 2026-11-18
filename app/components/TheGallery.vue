@@ -37,6 +37,18 @@ const S3 = {
     mid: [ [0.1, -0.1],[-0.18, 0.25], [-0.15, -0.15] , [0.13, 0.12],[0, 0]],
 }
 
+// s4：第一張橫移進來，之後每張停 hold 再花 rise 從下方升上來；pos = tl / tr / bl / br
+const S4 = { hold: 0.8, rise: 1, fromScale: 0.5 }
+const photos = [
+    { src: p('p4'), alt: 'Looking up through a white spiral staircase at a clear blue sky, Kaohsiung Station', tagline: 'KAOHSIUNG', taglinePos: 'tr', date: '2025.03', datePos: 'bl' },
+    { src: p('p3'), alt: 'Colorful floral silk lanterns hanging from a ceiling in Tainan', tagline: 'TAINAN', taglinePos: 'bl', date: '2025.05', datePos: 'bl' },
+]
+const s4Len = (photos.length - 1) * (S4.hold + S4.rise) + S4.hold
+
+const cards = ref<HTMLElement[]>([])
+const shown = reactive<Record<number, string>>({})
+let observer: IntersectionObserver | undefined
+
 const root = ref<HTMLElement>()
 const gallery = ref<HTMLElement>()
 const s3 = ref<HTMLElement>()
@@ -46,6 +58,15 @@ let offLenis: (() => void) | undefined
 onMounted(() => {
     gsap.registerPlugin(ScrollTrigger)
     offLenis = useNuxtApp().$lenis?.on('scroll', ScrollTrigger.update)
+
+    observer = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+            const i = Number((e.target as HTMLElement).dataset.i)
+            if (e.intersectionRatio >= 0.85) shown[i] = 'is-inview'
+            else if (e.intersectionRatio < 0.2) shown[i] = 'is-out'
+        }
+    }, { threshold: [0.2, 0.85] })
+    cards.value.forEach(el => observer!.observe(el))
 
     mm = gsap.matchMedia(root.value)
     mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
@@ -129,7 +150,7 @@ onMounted(() => {
         ScrollTrigger.create({
             trigger: s3.value,
             start: 'top top',
-            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.pan),
+            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.pan + s4Len),
             pin: true,
         })
 
@@ -138,7 +159,7 @@ onMounted(() => {
             scrollTrigger: {
                 trigger: s3.value,
                 start: at(1 - S3.enterAt),
-                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.pan),
+                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.pan + s4Len),
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -155,12 +176,21 @@ onMounted(() => {
         tl3.fromTo('.s3 .next', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: S3.wipe })
             // s3 與 s4 並排一起往左移
             .to('.track', { x: () => -W(), duration: S3.pan })
-            .fromTo('.s4 img', { scale: 1.05 }, { scale: 1, duration: S3.pan }, '<')
+
+        const cardEls = gsap.utils.toArray<HTMLElement>('.s4 .card').slice(1)
+        tl3.set(cardEls, { yPercent: 100, scaleX: S4.fromScale, scaleY: S4.fromScale, immediateRender: true }, 0)
+        const midScale = S4.fromScale + (1 - S4.fromScale) * 0.8
+        cardEls.forEach((el) => {
+            tl3.to({}, { duration: S4.hold })
+                .to(el, { keyframes: { '50%': { scaleX: midScale, scaleY: 1 }, '100%': { yPercent: 0, scaleX: 1, scaleY: 1 }, easeEach: 'none' }, duration: S4.rise })
+        })
+        tl3.to({}, { duration: S4.hold })
     })
 })
 
 onBeforeUnmount(() => {
     mm?.revert()
+    observer?.disconnect()
     offLenis?.()
 })
 </script>
@@ -190,7 +220,13 @@ onBeforeUnmount(() => {
                     <div class="ph p4"><img :src="p('DSC06162')" alt=""><img class="next" :src="p('DSC07210')" alt=""></div>
                     <div class="ph p5"><img :src="p('DSC07461')" alt=""><img class="next" :src="p('DSC06350')" alt=""></div>
                 </div>
-                <div class="s4"><img :src="p('p4')" alt=""></div>
+                <div class="s4">
+                    <article v-for="(photo, i) in photos" :key="i" ref="cards" class="card" :style="{ '--i': i }" :data-i="i">
+                        <img :src="photo.src" :alt="photo.alt">
+                        <span class="info tagline" :class="[photo.taglinePos, shown[i]]"><span class="info_text">{{ photo.tagline }}</span></span>
+                        <span class="info date" :class="[photo.datePos, shown[i]]"><span class="info_text">{{ photo.date }}</span></span>
+                    </article>
+                </div>
             </div>
         </section>
     </div>
@@ -256,15 +292,146 @@ onBeforeUnmount(() => {
 }
 
 .s4 {
-    height: 100vh;
+    --gutter: 4vw;
+    position: relative;
     overflow: hidden;
 }
 
-.s4 img {
+.card {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    z-index: var(--i);
+}
+
+.card img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    animation: breathe 6s ease-in-out infinite alternate;
+}
+
+@keyframes breathe {
+    from { scale: 1.1; }
+    to { scale: 1; }
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 40%;
+    background: linear-gradient(to top, #0009, transparent);
+    pointer-events: none;
+}
+
+/* 色塊從 --from 長滿，再往 --to 收掉，收的同時刷出字 */
+.info {
+    position: absolute;
+    z-index: 1;
+    max-width: calc(100% - var(--gutter) * 2);
+    color: #fff;
+    line-height: 1.4;
+    user-select: none;
+    --from: left;
+    --to: right;
+    --clip-hidden: inset(0 100% 0 0);
+    opacity: 0;
+    transition: opacity 0.5s ease-out, translate 0.5s ease-out;
+}
+
+.info.is-inview {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.info.is-out {
+    opacity: 0;
+    translate: 0 0.6rem;
+}
+
+.info.is-out .info_text { clip-path: inset(0 0 0 0); }
+
+.info::after {
+    content: '';
+    position: absolute;
+    inset: -0.08em 0;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: var(--from) center;
+}
+
+.info_text {
+    display: inline-block;
+    clip-path: var(--clip-hidden);
+}
+
+.info.is-inview::after { animation: info-block 0.9s both; }
+.info.is-inview .info_text { animation: info-text 0.45s cubic-bezier(1, -0.05, 0, 1.05) 0.45s both; }
+
+@keyframes info-block {
+    0% {
+        transform: scaleX(0);
+        transform-origin: var(--from) center;
+        animation-timing-function: cubic-bezier(1, -0.05, 0, 1.05);
+    }
+    35% {
+        transform: scaleX(1);
+        transform-origin: var(--from) center;
+    }
+    50% {
+        transform: scaleX(1);
+        transform-origin: var(--to) center;
+        animation-timing-function: cubic-bezier(1, -0.05, 0, 1.05);
+    }
+    100% {
+        transform: scaleX(0);
+        transform-origin: var(--to) center;
+    }
+}
+
+@keyframes info-text {
+    from { clip-path: var(--clip-hidden); }
+    to { clip-path: inset(0 0 0 0); }
+}
+
+.info.tl, .info.tr { top: var(--gutter); }
+.info.bl, .info.br { bottom: var(--gutter); }
+.info.tl, .info.bl { left: var(--gutter); }
+
+.info.tr,
+.info.br {
+    right: var(--gutter);
+    text-align: right;
+    --from: right;
+    --to: left;
+    --clip-hidden: inset(0 0 0 100%);
+}
+
+.info.tagline {
+    top: 4%;
+    bottom: auto;
+    font-size: 6vw;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.info.date {
+    font-size: clamp(0.75rem, 1vw, 1rem);
+    letter-spacing: 0.14em;
+    color: #ffffffcc;
+}
+
+@media (max-width: 767px) {
+    .info.tagline { font-size: 3em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card img { animation: none; }
+    .info { transition: none; }
+    .info::after { display: none; }
+    .info_text { clip-path: none; }
 }
 
 @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
@@ -275,6 +442,14 @@ onBeforeUnmount(() => {
 
     .s3,
     .s4 { flex: 0 0 100vw; }
+
+    .s4 { height: 100vh; }
+
+    .card {
+        position: absolute;
+        inset: 0;
+        height: auto;
+    }
 }
 
 .s3 .ph { aspect-ratio: 3 / 2; }
