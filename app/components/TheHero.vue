@@ -138,7 +138,7 @@ onBeforeUnmount(() => stopObserving?.())
 .hero_overlay {
   position: absolute;
   inset: 0;
-  background: rgb(0 0 0 / 0.6);
+  background: rgb(0 0 0 / 0.4);
 }
 
 .hero_title {

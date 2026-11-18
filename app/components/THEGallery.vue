@@ -24,7 +24,20 @@ const CONFIG = {
     end: 1,
 }
 
+// s3：enterAt / enterEnd = 照片開始上來 / 最後一張升完（1 = 區塊滿版），spread = 之後再捲多少到定位
+// mid = 疊在中間時相對畫面中心的偏移 [vw, vh]，順序同 template
+// 依 p1→p5 順序上來，一張到定點後下一張才出發
+const S3 = {
+    enterAt: 0.5,
+    enterEnd: 1.5,
+    centerFrom: 0.6,
+    spread: 0.5,
+    mid: [ [0.1, -0.1],[-0.18, 0.25], [-0.15, -0.15] , [0.13, 0.12],[0, 0]],
+}
+
 const root = ref<HTMLElement>()
+const gallery = ref<HTMLElement>()
+const s3 = ref<HTMLElement>()
 let mm: gsap.MatchMedia | undefined
 let offLenis: (() => void) | undefined
 
@@ -54,15 +67,15 @@ onMounted(() => {
         const at = (v: number) => `top ${v * 100}%`
         const total = C.enter + C.expand + C.zoom + C.hold + C.wipe + C.end
 
-        gsap.fromTo(root.value!, { backgroundColor: C.bgFrom }, {
+        gsap.fromTo(gallery.value!, { backgroundColor: C.bgFrom }, {
             backgroundColor: C.bgTo,
             duration: C.bgDuration,
             ease: 'power2.out',
-            scrollTrigger: { trigger: root.value, start: at(C.bgStart), toggleActions: 'play none none reverse' },
+            scrollTrigger: { trigger: gallery.value, start: at(C.bgStart), toggleActions: 'play none none reverse' },
         })
 
         ScrollTrigger.create({
-            trigger: root.value,
+            trigger: gallery.value,
             start: 'top top',
             end: () => '+=' + H() * (total - C.enterAt),
             pin: true,
@@ -72,7 +85,7 @@ onMounted(() => {
         const tl = gsap.timeline({
             defaults: { ease: 'none' },
             scrollTrigger: {
-                trigger: root.value,
+                trigger: gallery.value,
                 start: at(C.enterAt),
                 end: () => '+=' + H() * total,
                 scrub: true,
@@ -99,6 +112,44 @@ onMounted(() => {
             // 灰色層由右往左刷過去
             .fromTo('.s2', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: C.wipe })
             .to({}, { duration: C.end })
+
+        // s3：照片從下方升上來疊在中間，pin 住後散開到 CSS 定位
+        const els = gsap.utils.toArray<HTMLElement>('.s3 .ph')
+        const midX = (i: number) => {
+            const el = els[i]!
+            return W() / 2 - (el.offsetLeft + el.offsetWidth / 2) + S3.mid[i]![0]! * W()
+        }
+        const midY = (i: number) => {
+            const el = els[i]!
+            return H() / 2 - (el.offsetTop + el.offsetHeight / 2) + S3.mid[i]![1]! * H()
+        }
+
+        ScrollTrigger.create({
+            trigger: s3.value,
+            start: 'top top',
+            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread),
+            pin: true,
+        })
+
+        const tl3 = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+                trigger: s3.value,
+                start: at(1 - S3.enterAt),
+                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread),
+                scrub: true,
+                invalidateOnRefresh: true,
+            },
+        })
+            .set(els, { x: midX, y: (i: number) => midY(i) + H(), scale: (i: number) => i === 4 ? S3.centerFrom : 1, immediateRender: true }, 0)
+            .to(els, {
+                y: midY,
+                ease: 'power1.out',
+                duration: (S3.enterEnd - S3.enterAt) / els.length,
+                stagger: (S3.enterEnd - S3.enterAt) / els.length,
+            })
+            .to(els, { x: 0, y: 0, scale: 1, duration: S3.spread })
+        zoomIn(tl3, '.s3 .ph img', S3.spread, '<', 1.1)
     })
 })
 
@@ -109,20 +160,29 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <section ref="root" class="gallery">
-        <div class="scene s1">
-            <div class="ph lt"><img :src="p('DSC06176')" alt=""></div>
-            <div class="ph lb"><img :src="p('DSC06177')" alt=""></div>
-            <div class="ph c3"><img :src="p('DSC06350')" alt=""></div>
-            <div class="ph rc"><img :src="p('DSC05522')" alt=""></div>
-        </div>
-        <div class="scene s2">
-            <div class="ph lt"><img :src="p('DSC04570')" alt=""></div>
-            <div class="ph lb"><img :src="p('DSC02469')" alt=""></div>
-            <div class="ph c3"><img :src="p('20251029-DSC03373')" alt=""></div>
-            <div class="ph rc"><img :src="p('20260208-DSC04966')" alt=""></div>
-        </div>
-    </section>
+    <div ref="root">
+        <section ref="gallery" class="gallery">
+            <div class="scene s1">
+                <div class="ph lt"><img :src="p('DSC06176')" alt=""></div>
+                <div class="ph lb"><img :src="p('DSC06177')" alt=""></div>
+                <div class="ph c3"><img :src="p('DSC06350')" alt=""></div>
+                <div class="ph rc"><img :src="p('DSC05522')" alt=""></div>
+            </div>
+            <div class="scene s2">
+                <div class="ph lt"><img :src="p('DSC04570')" alt=""></div>
+                <div class="ph lb"><img :src="p('DSC02469')" alt=""></div>
+                <div class="ph c3"><img :src="p('20251029-DSC03373')" alt=""></div>
+                <div class="ph rc"><img :src="p('20260208-DSC04966')" alt=""></div>
+            </div>
+        </section>
+        <section ref="s3" class="s3">
+            <div class="ph p1"><img :src="p('DSC06429')" alt=""></div>
+            <div class="ph p2"><img :src="p('DSC06506')" alt=""></div>
+            <div class="ph p3"><img :src="p('DSC07238')" alt=""></div>
+            <div class="ph p4"><img :src="p('DSC06162')" alt=""></div>
+            <div class="ph p5"><img :src="p('DSC07461')" alt=""></div>
+        </section>
+    </div>
 </template>
 
 <style scoped>
@@ -175,4 +235,18 @@ onBeforeUnmount(() => {
 
 .c3 { left: var(--L); }
 .rc { left: calc(var(--L) + 32vw); }
+
+.s3 {
+    position: relative;
+    height: 100vh;
+    overflow-x: clip;
+    background: #1f2433;
+}
+
+.s3 .ph { aspect-ratio: 3 / 2; }
+.p1 { left: 0; bottom: 5%; width: 26vw; z-index: 4; }
+.p2 { left: 10%; top: 5%; width: 22vw; z-index: 1; }
+.p3 { left: 70%; top: 45%; width: 24vw; z-index: 5; }
+.p4 { right: 0; top: 5%; width: 22vw; z-index: 2; }
+.s3 .p5 { left: calc(50vw - 100vh / 3); top: 0; height: 100%; aspect-ratio: 2 / 3; z-index: 3; }
 </style>

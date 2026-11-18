@@ -212,7 +212,8 @@ onBeforeUnmount(() => {
   top: 0;
   height: 100vh;
   padding: 0  4%;
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: visible;
   isolation: isolate;
 }
 
