@@ -16,10 +16,10 @@ const CONFIG = {
     bgStart: 0.1,
     bgDuration: 1,
     enterAt: 0.3,
-    enter: 1,
-    expand: 2,
-    zoom: 1.5,
-    hold: 1,
+    enter: 0.64,
+    expand: 1.28,
+    zoom: 0.96,
+    hold: 0.64,
     wipe: 2.5,
     end: 1,
 }
@@ -34,15 +34,13 @@ const S3 = {
     spread: 0.5,
     wipe: 1,
     pan: 1.5,
+    gap: 0.2,
     mid: [ [0.1, -0.1],[-0.18, 0.25], [-0.15, -0.15] , [0.13, 0.12],[0, 0]],
 }
 
 // s4：第一張橫移進來，之後每張停 hold 再花 rise 從下方升上來；pos = tl / tr / bl / br
 const S4 = { hold: 0.8, rise: 1, fromScale: 0.5 }
-const photos = [
-    { src: p('p4'), alt: 'Looking up through a white spiral staircase at a clear blue sky, Kaohsiung Station', tagline: 'KAOHSIUNG', taglinePos: 'tr', date: '2025.03', datePos: 'bl' },
-    { src: p('p3'), alt: 'Colorful floral silk lanterns hanging from a ceiling in Tainan', tagline: 'TAINAN', taglinePos: 'bl', date: '2025.05', datePos: 'bl' },
-]
+const photos = s4Photos.map(ph => ({ ...ph, src: p(ph.id) }))
 const s4Len = (photos.length - 1) * (S4.hold + S4.rise) + S4.hold
 
 const cards = ref<HTMLElement[]>([])
@@ -150,7 +148,7 @@ onMounted(() => {
         ScrollTrigger.create({
             trigger: s3.value,
             start: 'top top',
-            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.pan + s4Len),
+            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.pan + S3.gap * 2 + s4Len),
             pin: true,
         })
 
@@ -159,7 +157,7 @@ onMounted(() => {
             scrollTrigger: {
                 trigger: s3.value,
                 start: at(1 - S3.enterAt),
-                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.pan + s4Len),
+                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.pan + S3.gap * 2 + s4Len),
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -173,8 +171,10 @@ onMounted(() => {
             })
             .to(els, { x: 0, y: 0, scale: 1, duration: S3.spread })
         zoomIn(tl3, '.s3 .ph img:not(.next)', S3.spread, '<', 1.1)
-        tl3.fromTo('.s3 .next', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: S3.wipe })
+        tl3.to({}, { duration: S3.gap })
+            .fromTo('.s3 .next', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: S3.wipe })
             // s3 與 s4 並排一起往左移
+            .to({}, { duration: S3.gap })
             .to('.track', { x: () => -W(), duration: S3.pan })
 
         const cardEls = gsap.utils.toArray<HTMLElement>('.s4 .card').slice(1)
