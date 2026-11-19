@@ -49,7 +49,7 @@ onBeforeUnmount(() => lockScroll(false))
 }
 
 .sec {
-  height: 100vh;
+  height: 50vh;
   background-color: v-bind(backgroundColor);
 }
 
