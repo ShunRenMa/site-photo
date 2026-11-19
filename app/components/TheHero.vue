@@ -179,9 +179,9 @@ onBeforeUnmount(() => stopObserving?.())
 
 .hero_brand {
   position: absolute;
-  top: calc(64px + 2vw);
+  top: calc(64px + 3vw);
   right: 4%;
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(2rem, 6.5vw, 4rem);
   line-height: 1.1;
 }
 
