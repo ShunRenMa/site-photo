@@ -188,7 +188,7 @@ watch(
 <style scoped>
 .nav_root {
   --gutter: 4vw;
-  --nav-wipe-color: #053056;
+  --nav-wipe-color: #fff;
   --nav-wipe-duration: 0.8s;
 }
 

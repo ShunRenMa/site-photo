@@ -43,6 +43,7 @@ onBeforeUnmount(() => lockScroll(false))
 <style scoped>
 .home {
   --nav-delay: 0.4s;
+  --brand-delay: 0.6s;
   --title-delay: 0.8s;
   --scroll-delay: 2s;
 }
