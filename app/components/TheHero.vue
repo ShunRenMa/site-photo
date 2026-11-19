@@ -94,6 +94,12 @@ onBeforeUnmount(() => stopObserving?.())
         >{{ c.char }}</span>
       </span>
     </h1>
+    <div class="hero_brand">
+      <div class="hero_brand_inner">
+        <p class="hero_brand_name">PAKA's Studio</p>
+        <p class="hero_brand_role">Art Creator / Photographer</p>
+      </div>
+    </div>
     <span class="hero_scroll" aria-hidden="true">
       <span class="hero_scroll_inner" @animationend.self="emit('ready')">
         <span class="hero_scroll_text">Scroll</span>
@@ -107,9 +113,8 @@ onBeforeUnmount(() => stopObserving?.())
 .hero {
   --char-duration: 0.7s;
   --char-stagger: 0.03s;
-  --accent: #26b9eeed;
-  --scroll-color: #2e2e2e;
-  --scroll-wipe-color: #053056;
+  --scroll-color: #fff;
+  --wipe-color: #fff;
   --scroll-wipe-duration: 0.8s;
   position: relative;
   height: 130svh;
@@ -143,14 +148,13 @@ onBeforeUnmount(() => stopObserving?.())
 
 .hero_title {
   position: absolute;
-  top: 60svh;
+  top: 64svh;
   left: 4%;
   margin: 0;
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 400;
+  font-size: clamp(1.75rem, 4vw, 3.5rem);
+  font-weight: 300;
   line-height: 1.1;
   transform: translateY(-50%);
-  color: var(--accent);
 }
 
 .hero_line {
@@ -171,6 +175,22 @@ onBeforeUnmount(() => stopObserving?.())
 .hero_char {
   display: inline-block;
   white-space: pre;
+}
+
+.hero_brand {
+  position: absolute;
+  top: calc(64px + 3vw);
+  right: 4%;
+  font-size: clamp(2rem, 6.5vw, 4rem);
+  line-height: 1.1;
+}
+
+.hero_brand p {
+  margin: 0;
+}
+
+.hero_brand_role {
+  font-size: clamp(0.6rem, 1.8vw, 1.2rem);
 }
 
 .hero_scroll {
@@ -216,16 +236,31 @@ onBeforeUnmount(() => stopObserving?.())
       cubic-bezier(0.33, 1, 0.68, 1) both;
   }
 
+  .hero_brand::after,
   .hero_scroll::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--scroll-wipe-color);
+    background: var(--wipe-color);
     clip-path: inset(0 100% 0 0);
   }
 
+  .hero_brand_inner,
   .hero_scroll_inner {
     visibility: hidden;
+  }
+
+  .hero.is-playing .hero_brand::after {
+    animation: hero-scroll-wipe var(--scroll-wipe-duration) var(--brand-delay, 0s)
+      cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+
+  .hero.is-playing .hero_brand_inner {
+    animation: hero-scroll-show var(--scroll-wipe-duration) var(--brand-delay, 0s) both;
+  }
+
+  .hero_scroll_line {
+    animation: hero-scroll-line 2.4s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
   }
 
   .hero.is-playing .hero_scroll::after {
@@ -255,6 +290,28 @@ onBeforeUnmount(() => stopObserving?.())
 
   100% {
     clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes hero-scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  50.1% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
   }
 }
 

@@ -35,7 +35,7 @@ onBeforeUnmount(() => lockScroll(false))
     <div class="thr"></div>
     <TheGallery />
      <div class="thr"></div>
-    <TheShowroom/>
+    <TheShowroom :background="backgroundColor"/>
   </div>
 </template>
 
@@ -43,12 +43,13 @@ onBeforeUnmount(() => lockScroll(false))
 <style scoped>
 .home {
   --nav-delay: 0.4s;
+  --brand-delay: 0.6s;
   --title-delay: 0.8s;
   --scroll-delay: 2s;
 }
 
 .sec {
-  height: 100vh;
+  height: 50vh;
   background-color: v-bind(backgroundColor);
 }
 
