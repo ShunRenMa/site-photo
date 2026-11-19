@@ -35,7 +35,7 @@ onBeforeUnmount(() => lockScroll(false))
     <div class="thr"></div>
     <TheGallery />
      <div class="thr"></div>
-    <TheShowroom/>
+    <TheShowroom :background="backgroundColor"/>
   </div>
 </template>
 
