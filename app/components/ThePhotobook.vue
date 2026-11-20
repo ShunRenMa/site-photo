@@ -79,17 +79,6 @@ const enterDuration = ENTER + STAGGER * 3
 const entered = ref(false)
 const CIRCLE_ALTERNATE_Y = true
 
-useHead({
-  link: [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400&display=swap',
-    },
-  ],
-})
-
 const sectionEl = ref<HTMLElement>()
 const trackEl = ref<HTMLElement>()
 const offset = ref(0)
