@@ -292,6 +292,21 @@ onBeforeUnmount(() => mm?.revert())
     }
 
     .side { display: block; }
+
+    .lead {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .frame {
+        width: 100%;
+        max-width: none;
+    }
+
+    .text {
+        order: -1;
+        margin: 0 0 2rem;
+    }
 }
 
 @media (max-width: 767px), (prefers-reduced-motion: reduce) {
@@ -304,8 +319,9 @@ onBeforeUnmount(() => mm?.revert())
     }
 
     .roll-lead,
-    .stream,
-    .end { position: static; }
+    .stream { position: static; }
+
+    .end { position: relative; }
 
     .roll-lead {
         width: 100%;

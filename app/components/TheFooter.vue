@@ -165,14 +165,19 @@ a:hover::after {
 }
 
 @media (max-width: 767px) {
+    .ending { height: 100dvh; }
+
     .small { font-size: 4cqw; }
 
     footer { font-size: 3.5cqw; }
     .nav_area { flex-wrap: wrap; }
 
+    .nav_item { flex: none; }
+
     .copy_right_item {
         flex-basis: 100%;
         margin-top: 8cqw;
+        text-align: center;
     }
 }
 

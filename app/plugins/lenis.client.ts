@@ -7,6 +7,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 	if ('scrollRestoration' in history) {
 		history.scrollRestoration = 'manual'
 	}
+	window.scrollTo(0, 0)
+	window.addEventListener('pagehide', () => window.scrollTo(0, 0))
 
 	let lenis: Lenis | undefined
 
