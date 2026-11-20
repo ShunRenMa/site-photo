@@ -79,17 +79,6 @@ const enterDuration = ENTER + STAGGER * 3
 const entered = ref(false)
 const CIRCLE_ALTERNATE_Y = true
 
-useHead({
-  link: [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400&display=swap',
-    },
-  ],
-})
-
 const sectionEl = ref<HTMLElement>()
 const trackEl = ref<HTMLElement>()
 const offset = ref(0)
@@ -142,7 +131,7 @@ onBeforeUnmount(() => {
   <section
     ref="sectionEl"
     class="photobook"
-    :style="{ height: `${totalVh * 100}vh` }"
+    :style="{ '--total-vh': totalVh }"
   >
     <div
       class="photobook__sticky"
@@ -198,13 +187,50 @@ onBeforeUnmount(() => {
       </div>
       </Transition>
     </div>
+    <div class="photobook__list">
+      <article v-for="(b, bi) in books" :key="bi" class="photobook__book">
+        <div class="photobook__text">
+          <p class="photobook__author">PAKA (Shun Ren)</p>
+          <h2 class="photobook__title">
+            <span v-for="(line, i) in b.title" :key="i">{{ line }}</span>
+          </h2>
+          <div class="photobook__paragraphs">
+            <p v-for="(text, i) in b.paragraphs" :key="i" class="photobook__desc">
+              {{ text }}
+            </p>
+          </div>
+          <div v-if="b.paragraphsEn" class="photobook__paragraphs photobook__paragraphs--en">
+            <p v-for="(text, i) in b.paragraphsEn" :key="i" class="photobook__desc">
+              {{ text }}
+            </p>
+          </div>
+        </div>
+        <div class="photobook__photos">
+          <img
+            v-for="photo in b.photos"
+            :key="photo.id"
+            v-reveal
+            :src="photo.src"
+            alt=""
+            class="photobook__photo"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </article>
+    </div>
   </section>
 </template>
 
 <style scoped>
 .photobook {
   position: relative;
+  height: calc(var(--total-vh) * 100vh);
   background-color: #e3e9e9;
+}
+
+.photobook__list {
+  display: none;
 }
 
 .photobook__sticky {
@@ -348,5 +374,55 @@ onBeforeUnmount(() => {
 
 .photobook__paragraphs--en {
   margin-top: 2vw;
+}
+
+@media (max-width: 767px) {
+  .photobook {
+    height: auto;
+    padding: 0 4%;
+  }
+
+  .photobook__sticky {
+    display: none;
+  }
+
+  .photobook__list {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .photobook__text {
+    padding-top: 0;
+  }
+
+  .photobook__author {
+    font-size: 1rem;
+  }
+
+  .photobook__photos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .photobook__photo {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .photobook__photo {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+
+  .photobook__photo.on {
+    opacity: 1;
+    transform: none;
+  }
 }
 </style>

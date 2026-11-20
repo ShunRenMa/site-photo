@@ -116,19 +116,6 @@ watch(
         </ul>
       </div>
 
-      <button
-        ref="burgerEl"
-        type="button"
-        class="nav_burger"
-        :class="{ 'is-open': open, 'is-hidden': hidden && !open }"
-        :aria-expanded="open"
-        aria-controls="nav-panel"
-        :aria-label="open ? 'Close menu' : 'Open menu'"
-        @click="open = !open"
-      >
-        <span /><span /><span />
-      </button>
-
       <div
         class="panel_backdrop"
         :class="{ 'is-open': open }"
@@ -181,6 +168,19 @@ watch(
       </div>
     </nav>
 
+    <button
+      ref="burgerEl"
+      type="button"
+      class="nav_burger"
+      :class="{ 'is-playing': isIntroDone, 'is-open': open, 'is-hidden': hidden && !open }"
+      :aria-expanded="open"
+      aria-controls="nav-panel"
+      :aria-label="open ? 'Close menu' : 'Open menu'"
+      @click="open = !open"
+    >
+      <span /><span /><span />
+    </button>
+
     <div v-if="wipeStyle" class="nav_wipe" :style="wipeStyle" aria-hidden="true" />
   </div>
 </template>
@@ -231,12 +231,12 @@ watch(
 
 @media (prefers-reduced-motion: no-preference) {
   .nav:not(.is-playing) .nav_menu,
-  .nav:not(.is-playing) .nav_burger {
+  .nav_burger:not(.is-playing) {
     visibility: hidden;
   }
 
   .nav.is-playing .nav_menu,
-  .nav.is-playing .nav_burger {
+  .nav_burger.is-playing {
     animation: nav-content-in var(--nav-wipe-duration) var(--nav-delay, 0s) both;
   }
 
@@ -348,14 +348,13 @@ watch(
   position: fixed;
   top: 0.5rem;
   right: var(--gutter);
-  z-index: 2;
+  z-index: 2147483647;
   width: var(--burger);
   height: var(--burger);
   padding: 0;
   border: 0;
   background: none;
-  color: #0f1419;
-  filter: drop-shadow(0 0 3px rgb(255 255 255 / 55%));
+  mix-blend-mode: difference;
   cursor: pointer;
   pointer-events: auto;
   transition:
@@ -375,7 +374,7 @@ watch(
   width: 60%;
   height: 1.5px;
   margin-top: -0.75px;
-  background: #6a6a6a;
+  background: #fff;
   transition:
     transform 0.4s ease,
     opacity 0.3s ease;

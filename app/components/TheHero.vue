@@ -221,6 +221,32 @@ onBeforeUnmount(() => stopObserving?.())
   background: currentColor;
 }
 
+@media (max-width: 767px) {
+  .hero_title {
+    top: 62svh;
+    left: 8%;
+  }
+
+  .hero_line:nth-child(n) {
+    right: auto;
+    text-align: start;
+  }
+
+  .hero_brand {
+    right: auto;
+    left: 8%;
+    font-size: 2.8rem;
+  }
+
+  .hero_brand_role {
+    font-size: 0.84rem;
+  }
+
+  .hero_scroll {
+    bottom: 4vh;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .hero_char {
     transform: translateY(110%);

@@ -201,6 +201,19 @@ onMounted(async () => {
   }
 }
 
+@media (max-width: 767px) {
+  .loading {
+    --hole-w: 30vmin;
+    --hole-h: 45vmin;
+  }
+
+  .loading__word {
+    padding: 0 0 0 0.08em;
+    font-size: 6.15vw;
+    white-space: nowrap;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loading {
     display: none;

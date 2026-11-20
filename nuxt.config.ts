@@ -17,6 +17,12 @@ export default defineNuxtConfig({
 				{ name: 'twitter:card', content: 'summary_large_image' },
 			],
 			link: [
+				{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+				{ rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+				{
+					rel: 'stylesheet',
+					href: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;700&family=Lora:wght@600&display=swap',
+				},
 				{ rel: 'icon', href: '/favicon.ico', sizes: '16x16 32x32' },
 				{
 					rel: 'icon',

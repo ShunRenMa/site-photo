@@ -463,4 +463,71 @@ onBeforeUnmount(() => {
 .p3 { left: 70%; top: 45%; width: 24vw; z-index: 5; }
 .p4 { right: 0; top: 5%; width: 22vw; z-index: 2; }
 .s3 .p5 { left: calc(50vw - 100vh / 3); top: 0; height: 100%; aspect-ratio: 2 / 3; z-index: 3; }
+
+@media (max-width: 767px) {
+    .gallery { height: auto; }
+
+    .s1 {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 15vw 4%;
+    }
+
+    .s1 .ph {
+        position: relative;
+        inset: auto;
+        width: 60%;
+        height: auto;
+    }
+
+    .s1 .ph img { height: auto; }
+
+    .s1 .lb,
+    .s1 .rc { margin-left: auto; }
+
+    .s3 {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        height: auto;
+        padding: 15vw 4%;
+    }
+
+    .s3 .ph {
+        position: relative;
+        inset: auto;
+        width: 60%;
+    }
+
+    .s3 .p2,
+    .s3 .p4 { margin-left: auto; }
+
+    .s3 .p5 {
+        width: 100%;
+        height: auto;
+    }
+
+    .s4 { overflow: clip; }
+}
+
+@supports (animation-timeline: view()) {
+    @media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+        .card {
+            position: sticky;
+            top: 0;
+            height: 100dvh;
+            animation: card-rise linear both;
+            animation-timeline: view();
+            animation-range: entry 0% entry 100%;
+        }
+    }
+}
+
+@keyframes card-rise {
+    from { scale: 0.5; }
+    50% { scale: 0.9 1; }
+    to { scale: 1; }
+}
 </style>
