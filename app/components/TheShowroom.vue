@@ -284,16 +284,16 @@ onBeforeUnmount(() => mm?.revert())
 .item:nth-child(even) { align-self: flex-end; }
 
 @media (min-width: 768px) {
-    .stream .item:nth-child(1) { width: 18vw; align-self: flex-start; }
-    .stream .item:nth-child(2) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(3) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
-    .stream .item:nth-child(4) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(5) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
-    .stream .item:nth-child(6) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(7) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
-    .stream .item:nth-child(8) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(9) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
-    .stream .item:nth-child(10) { width: 18vw; align-self: flex-end; }
+    .stream .item:nth-child(1) { width: 18vw; align-self: flex-start; position: relative; top: 15vw; }
+    .stream .item:nth-child(2) { width: 18vw; align-self: flex-end; margin-right: -4vw; }
+    .stream .item:nth-child(3) { width: 18vw; align-self: flex-start; margin-left: 4vw; position: relative; top: -15vw; }
+    .stream .item:nth-child(4) { width: 18vw; align-self: flex-end; margin-right: -4vw; position: relative; top: -15vw; }
+    .stream .item:nth-child(5) { width: 18vw; align-self: flex-start; position: relative; top: -15vw; }
+    .stream .item:nth-child(6) { width: 14vw; align-self: flex-end; margin-right: 0; position: relative; top: -15vw; }
+    .stream .item:nth-child(7) { width: 18vw; align-self: flex-start; margin-left: 4vw; position: relative; top: -23vw; }
+    .stream .item:nth-child(8) { width: 18vw; align-self: flex-end; margin-right: -4vw; position: relative; top: -23vw; }
+    .stream .item:nth-child(9) { width: 14vw; align-self: flex-start; position: relative; top: -39vw; }
+    .stream .item:nth-child(10) { width: 16vw; align-self: flex-end; margin-right: -2vw; position: relative; top: -39vw; }
 }
 
 .end {
