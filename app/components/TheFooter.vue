@@ -122,7 +122,11 @@ footer {
 
 .nav_item { flex: 1; }
 
-.copy_right_item { text-align: right; }
+.copy_right_item {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
 
 ul {
     margin: 0;
@@ -133,7 +137,10 @@ li { list-style: none; }
 
 p { margin: 0; }
 
-.intro { margin-bottom: 0.6em; }
+.intro {
+    order: 1;
+    margin-top: 0.6em;
+}
 
 a {
     position: relative;
@@ -183,6 +190,11 @@ a:hover::after {
         flex-basis: 100%;
         margin-top: 8cqw;
         text-align: center;
+    }
+
+    .intro {
+        order: 0;
+        margin: 0 0 0.6em;
     }
 }
 
