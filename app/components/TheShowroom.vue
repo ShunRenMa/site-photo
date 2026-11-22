@@ -26,6 +26,7 @@ defineProps<{ background: string }>()
 // lift = 右上那張起始在 top -lift 畫面高，碰到視窗上緣後被帶下來，pin 時剛好回到 top 0
 // shrinkTo = 刷完的兩張縮到多少再往左出場，pan = 橫移到 end roll
 // leadFrom2 = roll 左側小圖起始比例，grow = 放大到上下頂滿，roll = 右側照片往上捲
+// listFrom = 右側照片橫移時多落後幾個畫面寬，pan + grow 期間追上
 // endSize = footer 縮圖佔畫面的比例（右下），footIn = footer 縮圖升上來，expand = 放大到滿版
 const CONFIG = {
     leadFrom: 20,
@@ -42,6 +43,7 @@ const CONFIG = {
     pan: 1.5,
     leadFrom2: 0.4,
     grow: 1,
+    listFrom: 0.3,
     roll: 4,
     parallax: 50,
     endSize: 0.22,
@@ -97,7 +99,10 @@ onMounted(() => {
             .to(['.frame', '.cover', '.side'], { scale: C.shrinkTo, ease: 'power2.inOut', duration: C.shrink })
             .to('.text', { opacity: 0, duration: C.shrink }, '<')
             .to('.track', { x: () => -W(), ease: 'power2.inOut', duration: C.pan })
-            .fromTo('.roll-lead', { scale: C.leadFrom2 }, { scale: 1, ease: 'power2.inOut', duration: C.grow })
+            .addLabel('grow')
+            // 右側照片比 roll 晚到，roll-lead 放大時還在往左靠
+            .fromTo('.stream', { x: () => W() * C.listFrom }, { x: 0, ease: 'power2.out', duration: C.pan + C.grow }, `grow-=${C.pan}`)
+            .fromTo('.roll-lead', { scale: C.leadFrom2 }, { scale: 1, ease: 'power2.inOut', duration: C.grow }, 'grow')
             // 右側照片往上捲，每張帶一點視差和縮放
             .fromTo('.stream', { y: 0 }, { y: () => -(streamEl.offsetTop + streamEl.offsetHeight), duration: C.roll }, `-=${C.grow * 0.5}`)
             .fromTo('.stream .item', { yPercent: (i: number) => PARALLAX.includes(i + 1) ? C.parallax : 0 }, { yPercent: (i: number) => PARALLAX.includes(i + 1) ? -C.parallax : 0, duration: C.roll }, '<')
@@ -277,6 +282,19 @@ onBeforeUnmount(() => mm?.revert())
 .item img { height: auto; }
 
 .item:nth-child(even) { align-self: flex-end; }
+
+@media (min-width: 768px) {
+    .stream .item:nth-child(1) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(2) { width: 18vw; align-self: flex-end; }
+    .stream .item:nth-child(3) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(4) { width: 18vw; align-self: flex-end; }
+    .stream .item:nth-child(5) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(6) { width: 18vw; align-self: flex-end; }
+    .stream .item:nth-child(7) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(8) { width: 18vw; align-self: flex-end; }
+    .stream .item:nth-child(9) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(10) { width: 18vw; align-self: flex-end; }
+}
 
 .end {
     position: absolute;
