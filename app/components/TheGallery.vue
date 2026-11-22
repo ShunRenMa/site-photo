@@ -33,6 +33,7 @@ const S3 = {
     centerFrom: 0.6,
     spread: 0.5,
     wipe: 1,
+    nextHold: 0.2,
     pan: 1.5,
     gap: 0.2,
     mid: [ [0.1, -0.1],[-0.18, 0.25], [-0.15, -0.15] , [0.13, 0.12],[0, 0]],
@@ -148,7 +149,7 @@ onMounted(() => {
         ScrollTrigger.create({
             trigger: s3.value,
             start: 'top top',
-            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.pan + S3.gap * 2 + s4Len),
+            end: () => '+=' + H() * (S3.enterEnd - 1 + S3.spread + S3.wipe + S3.nextHold + S3.pan + S3.gap * 2 + s4Len),
             pin: true,
         })
 
@@ -157,7 +158,7 @@ onMounted(() => {
             scrollTrigger: {
                 trigger: s3.value,
                 start: at(1 - S3.enterAt),
-                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.pan + S3.gap * 2 + s4Len),
+                end: () => '+=' + H() * (S3.enterEnd - S3.enterAt + S3.spread + S3.wipe + S3.nextHold + S3.pan + S3.gap * 2 + s4Len),
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -173,6 +174,7 @@ onMounted(() => {
         zoomIn(tl3, '.s3 .ph img:not(.next)', S3.spread, '<', 1.1)
         tl3.to({}, { duration: S3.gap })
             .fromTo('.s3 .next', { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: S3.wipe })
+            .to({}, { duration: S3.nextHold })
             // s3 與 s4 並排一起往左移
             .to({}, { duration: S3.gap })
             .to('.track', { x: () => -W(), duration: S3.pan })
@@ -199,26 +201,26 @@ onBeforeUnmount(() => {
     <div ref="root">
         <section ref="gallery" class="gallery">
             <div class="scene s1">
-                <div class="ph lt"><img :src="p('DSC06176')" alt=""></div>
-                <div class="ph lb"><img :src="p('DSC06177')" alt=""></div>
-                <div class="ph c3"><img :src="p('DSC06350')" alt=""></div>
-                <div class="ph rc"><img :src="p('DSC05522')" alt=""></div>
+                <div class="ph lt"><img :src="p('DSC00188')" alt=""></div>
+                <div class="ph lb"><img :src="p('p4')" alt=""></div>
+                <div class="ph c3"><img :src="p('DSC05314')" alt=""></div>
+                <div class="ph rc"><img :src="p('DSC05338')" alt=""></div>
             </div>
             <div class="scene s2">
-                <div class="ph lt"><img :src="p('DSC04570')" alt=""></div>
-                <div class="ph lb"><img :src="p('DSC02469')" alt=""></div>
-                <div class="ph c3"><img :src="p('20251029-DSC03373')" alt=""></div>
-                <div class="ph rc"><img :src="p('20260208-DSC04966')" alt=""></div>
+                <div class="ph lt"><img :src="p('DSC03068')" alt=""></div>
+                <div class="ph lb"><img :src="p('DSC03937')" alt=""></div>
+                <div class="ph c3"><img :src="p('DSC03753')" alt=""></div>
+                <div class="ph rc"><img :src="p('DSC03771')" alt=""></div>
             </div>
         </section>
         <section ref="s3" class="s34">
             <div class="track">
                 <div class="s3">
-                    <div class="ph p1"><img :src="p('DSC06429')" alt=""><img class="next" :src="p('DSC06676')" alt=""></div>
-                    <div class="ph p2"><img :src="p('DSC06506')" alt=""><img class="next" :src="p('DSC07180')" alt=""></div>
-                    <div class="ph p3"><img :src="p('DSC07238')" alt=""><img class="next" :src="p('DSC07194')" alt=""></div>
-                    <div class="ph p4"><img :src="p('DSC06162')" alt=""><img class="next" :src="p('DSC07210')" alt=""></div>
-                    <div class="ph p5"><img :src="p('DSC07461')" alt=""><img class="next" :src="p('DSC06350')" alt=""></div>
+                    <div class="ph p1"><img :src="p('DSC03831')" alt=""><img class="next" :src="p('DSC04530-1')" alt=""></div>
+                    <div class="ph p2"><img :src="p('DSC03567')" alt=""><img class="next" :src="p('DSC04626')" alt=""></div>
+                    <div class="ph p3"><img :src="p('DSC03368')" alt=""><img class="next" :src="p('DSC04570')" alt=""></div>
+                    <div class="ph p4"><img :src="p('DSC03042')" alt=""><img class="next" :src="p('DSC04047')" alt=""></div>
+                    <div class="ph p5"><img :src="p('DSC03902')" alt=""><img class="next" :src="p('DSC04259')" alt=""></div>
                 </div>
                 <div class="s4">
                     <article v-for="(photo, i) in photos" :key="i" ref="cards" class="card" :style="{ '--i': i }" :data-i="i">

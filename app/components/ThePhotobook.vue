@@ -46,7 +46,10 @@ const photobooks: Record<string, Photobook> = {
             'Looking at these photos brings back the memories, and the people and things I met along the way.',
             'Here are some photos from my trips abroad!',
         ],
-        photos: toPhotos(['20251028-DSC03303', '20251028-DSC03262', '20251028-DSC03273']),
+        photos: toPhotos([
+            '20251028-DSC03303', '20251028-DSC03262', '20251028-DSC03273',
+            'DSC00240', 'DSC03947', 'DSC03902', 'DSC03567', 'DSC03753',
+        ]),
     },
     portrait: {
         title: ['Portrait Photography', '人像攝影'],

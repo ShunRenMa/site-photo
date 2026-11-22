@@ -6,14 +6,16 @@ import p2 from '~/assets/images/gallery/DSC06506.webp'
 import p3 from '~/assets/images/photobook/DSC06436.webp'
 import n1 from '~/assets/images/gallery/DSC00538.webp'
 import n2 from '~/assets/images/gallery/DSC07461.webp'
-import rollLead from '~/assets/images/gallery/20260208-DSC04966.webp'
+import rollLead from '~/assets/images/gallery/DSC02293.webp'
 
 const files = import.meta.glob<string>('~/assets/images/gallery/*.webp', { eager: true, import: 'default' })
 const photoMap = Object.fromEntries(
     Object.entries(files).map(([path, src]) => [path.split('/').pop()!.replace('.webp', ''), src]),
 )
 // 右邊交錯排列的照片（暫定）
-const stream = ['DSC06176', 'DSC04570', 'DSC06177', 'DSC06676', 'DSC07180', 'DSC02469', 'DSC07194', 'DSC06162', 'DSC07210', 'DSC07238'].map(id => photoMap[id])
+const stream = ['DSC00486', 'DSC03487', 'DSC03803', 'DSC02412', 'DSC02947', 'DSC04059', 'DSC04216', 'DSC04401', 'DSC05328', 'DSC02972'].map(id => photoMap[id])
+// 電腦版有視差的張數（第幾張），幅度見 CONFIG.parallax
+const PARALLAX = [3, 6, 8, 9]
 
 defineProps<{ background: string }>()
 
@@ -41,6 +43,7 @@ const CONFIG = {
     leadFrom2: 0.4,
     grow: 1,
     roll: 4,
+    parallax: 50,
     endSize: 0.22,
     footIn: 0.8,
     expand: 1.2,
@@ -97,7 +100,7 @@ onMounted(() => {
             .fromTo('.roll-lead', { scale: C.leadFrom2 }, { scale: 1, ease: 'power2.inOut', duration: C.grow })
             // 右側照片往上捲，每張帶一點視差和縮放
             .fromTo('.stream', { y: 0 }, { y: () => -(streamEl.offsetTop + streamEl.offsetHeight), duration: C.roll }, `-=${C.grow * 0.5}`)
-            .fromTo('.stream .item', { yPercent: (i: number) => i % 2 ? 25 : 0 }, { yPercent: (i: number) => i % 2 ? -25 : 0, duration: C.roll }, '<')
+            .fromTo('.stream .item', { yPercent: (i: number) => PARALLAX.includes(i + 1) ? C.parallax : 0 }, { yPercent: (i: number) => PARALLAX.includes(i + 1) ? -C.parallax : 0, duration: C.roll }, '<')
             .fromTo('.stream .item img', { scale: 1.15 }, { scale: 1, duration: C.roll }, '<')
             .fromTo('.roll-lead img', { scale: 1 }, { scale: 1.05, duration: C.roll }, '<')
             // footer 縮圖從下方升到右下，再放大到滿版
@@ -268,9 +271,10 @@ onBeforeUnmount(() => mm?.revert())
 
 .item {
     width: 18vw;
-    aspect-ratio: 3 / 2;
     overflow: hidden;
 }
+
+.item img { height: auto; }
 
 .item:nth-child(even) { align-self: flex-end; }
 
@@ -282,7 +286,13 @@ onBeforeUnmount(() => mm?.revert())
 }
 
 @media (max-width: 767px) {
-    .intro { height: auto; }
+    .intro {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: auto;
+        padding-bottom: 16px;
+    }
 
     .lead,
     .side {
@@ -336,5 +346,32 @@ onBeforeUnmount(() => mm?.revert())
     }
 
     .item { width: min(70%, 40vw); }
+}
+
+/* 參考 okeystudio 手機版 step 10：8 欄 grid 交錯排列 */
+@media (max-width: 767px) {
+    .stream {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        align-items: start;
+        gap: 0;
+        padding: 0 0 8vw;
+    }
+
+    .stream .item {
+        width: auto;
+        align-self: start;
+    }
+
+    .stream .item:nth-child(1) { grid-column: 1 / 8; margin-top: 4vw; }
+    .stream .item:nth-child(2) { grid-column: 9 / 13; margin-top: 16vw; }
+    .stream .item:nth-child(3) { grid-column: 1 / 6; margin-top: -4vw; margin-left: 4vw; margin-right: 6px; }
+    .stream .item:nth-child(4) { grid-column: 7 / 12; margin-top: 40vw; margin-left: 6px; margin-right: 4vw; }
+    .stream .item:nth-child(5) { grid-column: 1 / 7; margin-top: 8vw; }
+    .stream .item:nth-child(6) { grid-column: 8 / 13; margin-top: 24vw; margin-right:-10%;}
+    .stream .item:nth-child(7) { grid-column: 1 / 6; margin-top: -10vw; }
+    .stream .item:nth-child(8) { grid-column: 9 / 13; margin-top: 30vh; }
+    .stream .item:nth-child(9) { grid-column: 3 / 7; margin-top: -8vw; margin-left: -4vw; }
+    .stream .item:nth-child(10) { grid-column: 4 / 12; margin-top: 12px; margin-right: 4vw; }
 }
 </style>
