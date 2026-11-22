@@ -201,26 +201,26 @@ onBeforeUnmount(() => {
     <div ref="root">
         <section ref="gallery" class="gallery">
             <div class="scene s1">
-                <div class="ph lt"><img :src="p('DSC00188')" alt=""></div>
-                <div class="ph lb"><img :src="p('p4')" alt=""></div>
-                <div class="ph c3"><img :src="p('DSC05314')" alt=""></div>
-                <div class="ph rc"><img :src="p('DSC05338')" alt=""></div>
+                <div class="ph lt"><img :src="p('DSC00188')" :alt="altOf('DSC00188')"></div>
+                <div class="ph lb"><img :src="p('p4')" :alt="altOf('p4')"></div>
+                <div class="ph c3"><img :src="p('DSC05314')" :alt="altOf('DSC05314')"></div>
+                <div class="ph rc"><img :src="p('DSC05338')" :alt="altOf('DSC05338')"></div>
             </div>
             <div class="scene s2">
-                <div class="ph lt"><img :src="p('DSC03068')" alt=""></div>
-                <div class="ph lb"><img :src="p('DSC03937')" alt=""></div>
-                <div class="ph c3"><img :src="p('DSC03753')" alt=""></div>
-                <div class="ph rc"><img :src="p('DSC03771')" alt=""></div>
+                <div class="ph lt"><img :src="p('DSC03068')" :alt="altOf('DSC03068')"></div>
+                <div class="ph lb"><img :src="p('DSC03937')" :alt="altOf('DSC03937')"></div>
+                <div class="ph c3"><img :src="p('DSC03753')" :alt="altOf('DSC03753')"></div>
+                <div class="ph rc"><img :src="p('DSC03771')" :alt="altOf('DSC03771')"></div>
             </div>
         </section>
         <section ref="s3" class="s34">
             <div class="track">
                 <div class="s3">
-                    <div class="ph p1"><img :src="p('DSC03831')" alt=""><img class="next" :src="p('DSC04530-1')" alt=""></div>
-                    <div class="ph p2"><img :src="p('DSC03567')" alt=""><img class="next" :src="p('DSC04626')" alt=""></div>
-                    <div class="ph p3"><img :src="p('DSC03368')" alt=""><img class="next" :src="p('DSC04570')" alt=""></div>
-                    <div class="ph p4"><img :src="p('DSC03042')" alt=""><img class="next" :src="p('DSC04047')" alt=""></div>
-                    <div class="ph p5"><img :src="p('DSC03902')" alt=""><img class="next" :src="p('DSC04259')" alt=""></div>
+                    <div class="ph p1"><img :src="p('DSC03831')" :alt="altOf('DSC03831')"><img class="next" :src="p('DSC04530-1')" :alt="altOf('DSC04530-1')"></div>
+                    <div class="ph p2"><img :src="p('DSC03567')" :alt="altOf('DSC03567')"><img class="next" :src="p('DSC04626')" :alt="altOf('DSC04626')"></div>
+                    <div class="ph p3"><img :src="p('DSC03368')" :alt="altOf('DSC03368')"><img class="next" :src="p('DSC04570')" :alt="altOf('DSC04570')"></div>
+                    <div class="ph p4"><img :src="p('DSC03042')" :alt="altOf('DSC03042')"><img class="next" :src="p('DSC04047')" :alt="altOf('DSC04047')"></div>
+                    <div class="ph p5"><img :src="p('DSC03902')" :alt="altOf('DSC03902')"><img class="next" :src="p('DSC04259')" :alt="altOf('DSC04259')"></div>
                 </div>
                 <div class="s4">
                     <article v-for="(photo, i) in photos" :key="i" ref="cards" class="card" :style="{ '--i': i }" :data-i="i">

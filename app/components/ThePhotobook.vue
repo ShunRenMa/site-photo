@@ -29,7 +29,7 @@ const photobooks: Record<string, Photobook> = {
         ],
         photos: toPhotos([
             'DSC06471-Edit', 'DSC06436', 'DSC06506', 'DSC06676', 'DSC07090',
-            'DSC07194', 'DSC07203', 'DSC07238', 'DSC07414', 'DSC07517',
+            'DSC07194', 'DSC07203', 'DSC07238', 'DSC07414', 'DSC06429', 'DSC02469',
         ]),
     },
     travel: {
@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
             :key="photo.id"
             v-reveal
             :src="photo.src"
-            alt=""
+            :alt="altOf(photo.id)"
             class="photobook__photo"
             loading="lazy"
             decoding="async"

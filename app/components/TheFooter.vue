@@ -6,6 +6,8 @@ const navArray = [
     [{ name: 'CONTACT', url: 'mailto:e12813726@gmail.com' }],
     [{ name: 'INSTAGRAM', url: 'https://www.instagram.com/paka.ph_024/' }],
 ]
+const introZh = '台北街頭與人像攝影師，喜歡旅行，也常在旅途中記錄珍貴的畫面。'
+const intro = 'Paka is a Taipei-based street and portrait photographer who loves to travel, capturing precious moments along the way.'
 const copyRight = '© 2026 ShunRen Ma.'
 </script>
 
@@ -33,6 +35,7 @@ const copyRight = '© 2026 ShunRen Ma.'
                         </ul>
                     </div>
                     <div class="nav_item copy_right_item">
+                        <p class="intro">{{ introZh }}<br>{{ intro }}</p>
                         <p>{{ copyRight }}</p>
                     </div>
                 </div>
@@ -129,6 +132,8 @@ ul {
 li { list-style: none; }
 
 p { margin: 0; }
+
+.intro { margin-bottom: 0.6em; }
 
 a {
     position: relative;
