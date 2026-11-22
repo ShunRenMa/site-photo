@@ -266,8 +266,8 @@ onBeforeUnmount(() => mm?.revert())
 
 .stream {
     position: absolute;
-    top: 35%;
-    left: calc(4vw + 100vh);
+    top: 55%;
+    left: 100vh;
     right: 4vw;
     display: flex;
     flex-direction: column;
@@ -286,13 +286,13 @@ onBeforeUnmount(() => mm?.revert())
 @media (min-width: 768px) {
     .stream .item:nth-child(1) { width: 18vw; align-self: flex-start; }
     .stream .item:nth-child(2) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(3) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(3) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
     .stream .item:nth-child(4) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(5) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(5) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
     .stream .item:nth-child(6) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(7) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(7) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
     .stream .item:nth-child(8) { width: 18vw; align-self: flex-end; }
-    .stream .item:nth-child(9) { width: 18vw; align-self: flex-start; }
+    .stream .item:nth-child(9) { width: 18vw; align-self: flex-start; margin-left: 4vw; }
     .stream .item:nth-child(10) { width: 18vw; align-self: flex-end; }
 }
 
