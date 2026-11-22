@@ -13,7 +13,7 @@ const photoMap = Object.fromEntries(
     Object.entries(files).map(([path, src]) => [path.split('/').pop()!.replace('.webp', ''), src]),
 )
 // 右邊交錯排列的照片（暫定）
-const stream = ['DSC00486', 'DSC03487', 'DSC03803', 'DSC02412', 'DSC02947', 'DSC04059', 'DSC04216', 'DSC04401', 'DSC05328', 'DSC02972'].map(id => photoMap[id])
+const stream = ['DSC00486', 'DSC03487', 'DSC03803', 'DSC02412', 'DSC02947', 'DSC04059', 'DSC04216', 'DSC04401', 'DSC05328', 'DSC02972'].map(id => ({ id, src: photoMap[id] }))
 // 電腦版有視差的張數（第幾張），幅度見 CONFIG.parallax
 const PARALLAX = [3, 6, 8, 9]
 
@@ -139,7 +139,7 @@ onBeforeUnmount(() => mm?.revert())
         <div class="track">
             <div class="panel intro">
                 <div class="lead">
-                    <div class="frame"><img :src="p1" alt=""><img class="next" :src="n1" alt=""></div>
+                    <div class="frame"><img :src="p1" :alt="altOf('DSC06471-Edit')"><img class="next" :src="n1" :alt="altOf('DSC00538')"></div>
                     <div class="text">
                         <p>謝謝你看到這裡，接下來是系列照片。</p>
                         <p>我期望在生活中創造出一些驚喜與不平凡。</p>
@@ -149,14 +149,14 @@ onBeforeUnmount(() => mm?.revert())
                         </div>
                     </div>
                 </div>
-                <div class="side rt"><img :src="p2" alt=""></div>
-                <div class="side rb"><img :src="p3" alt=""></div>
-                <div class="cover"><img :src="n2" alt=""></div>
+                <div class="side rt"><img :src="p2" :alt="altOf('DSC06506')"></div>
+                <div class="side rb"><img :src="p3" :alt="altOf('DSC06436')"></div>
+                <div class="cover"><img :src="n2" :alt="altOf('DSC07461')"></div>
             </div>
             <div class="panel roll">
-                <div class="roll-lead"><img :src="rollLead" alt=""></div>
+                <div class="roll-lead"><img :src="rollLead" :alt="altOf('DSC02293')"></div>
                 <div class="stream">
-                    <div v-for="(src, i) in stream" :key="i" class="item"><img :src="src" alt=""></div>
+                    <div v-for="(item, i) in stream" :key="i" class="item"><img :src="item.src" :alt="altOf(item.id)"></div>
                 </div>
                 <TheFooter class="end" />
             </div>

@@ -1,6 +1,17 @@
 <script setup lang="ts">
+const siteUrl = 'https://photography.alupaka.tw/'
+const description = '台北街頭與人像攝影師 Paka，喜歡旅行，在旅途中記錄珍貴的畫面。Taipei-based street & portrait photographer who loves to travel.'
+
+useSeoMeta({
+  description,
+  ogTitle: 'Paka | Photography Portfolio',
+  ogDescription: description,
+  ogUrl: siteUrl,
+})
+
 useHead({
   title: 'Photography Portfolio',
+  link: [{ rel: 'canonical', href: siteUrl }],
   script: [
     {
       type: 'application/ld+json',
@@ -13,6 +24,7 @@ useHead({
             name: 'Paka',
             alternateName: 'Shun Ren Ma',
             url: 'https://photography.alupaka.tw/',
+            inLanguage: 'zh-Hant',
             publisher: { '@id': 'https://photography.alupaka.tw/#person' },
           },
           {
@@ -21,6 +33,13 @@ useHead({
             name: 'Paka',
             alternateName: 'Shun Ren Ma',
             jobTitle: 'Photographer',
+            description,
+            knowsAbout: ['Street Photography', 'Portrait Photography', 'Travel Photography'],
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: 'Taipei',
+              addressCountry: 'TW',
+            },
             url: 'https://photography.alupaka.tw/',
             sameAs: ['https://www.instagram.com/paka.ph_024/'],
           },
