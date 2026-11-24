@@ -2,7 +2,7 @@
 import bg from '~/assets/images/photobook/20251028-DSC03303.webp'
 
 const navArray = [
-    [{ name: 'HOME', url: '/' }],
+    [{ name: 'HOME', url: 'https://photography.alupaka.tw/' }],
     [{ name: 'CONTACT', url: 'mailto:e12813726@gmail.com' }],
     [{ name: 'INSTAGRAM', url: 'https://www.instagram.com/paka.ph_024/' }],
 ]
@@ -28,7 +28,7 @@ const copyRight = '© 2026 ShunRen Ma.'
                                 <a
                                     v-else
                                     :href="item.url"
-                                    :target="item.url.startsWith('http') ? '_blank' : undefined"
+                                    :target="item.url.startsWith('http') && item.name !== 'HOME' ? '_blank' : undefined"
                                     rel="noopener"
                                 >{{ item.name }}</a>
                             </li>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const pages = [
-  { name: 'HOME', url: '/' },
+  { name: 'HOME', url: 'https://photography.alupaka.tw/' },
   { name: 'CONTACT', url: 'mailto:e12813726@gmail.com' },
 ]
 
