@@ -209,7 +209,7 @@ onMounted(async () => {
 
   .loading__word {
     padding: 0 0 0 0.08em;
-    font-size: 6.15vw;
+    font-size: 5.3vw;
     white-space: nowrap;
   }
 }
